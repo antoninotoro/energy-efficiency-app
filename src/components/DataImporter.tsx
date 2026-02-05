@@ -1,10 +1,9 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
-import { Upload, FileText, CheckCircle, XCircle, Sparkles, Database } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, Database } from 'lucide-react';
 import { PODData } from '@/lib/types';
 import { useEnergyStore } from '@/store/useEnergyStore';
 
@@ -90,183 +89,121 @@ export default function DataImporter() {
     onDrop,
     accept: {
       'text/csv': ['.csv'],
-      'application/pdf': ['.pdf'],
     },
     multiple: true,
   });
 
   return (
-    <div className="w-full space-y-6">
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-3"
-      >
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 blur-lg opacity-50 rounded-full" />
-          <div className="relative bg-gradient-to-br from-blue-500 to-cyan-600 p-3 rounded-xl">
-            <Database className="h-6 w-6 text-white" />
-          </div>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="section-header">
+        <div className="icon-box bg-gradient-blue">
+          <Database className="h-7 w-7 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white">Carica Dati Energetici</h2>
-          <p className="text-slate-400 text-sm">Upload profili di consumo POD</p>
+          <h2 className="text-2xl font-bold text-gray-900">Carica Dati Energetici</h2>
+          <p className="text-gray-600">Upload profili di consumo POD (file CSV)</p>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Dropzone with Modern Design */}
+      {/* Dropzone */}
       <div
         {...getRootProps()}
         className={`
-          relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer
-          transition-all duration-300 overflow-hidden group animate-fadeIn
+          border-4 border-dashed rounded-2xl p-12 text-center cursor-pointer
+          transition-all duration-200
           ${
             isDragActive
-              ? 'border-blue-500 bg-blue-500/10 scale-105'
-              : 'border-slate-600 bg-slate-800/30 hover:border-blue-400 hover:bg-slate-800/50'
+              ? 'border-blue-500 bg-blue-50'
+              : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
           }
         `}
       >
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
         <input {...getInputProps()} />
-
-        {/* Icon with animation */}
-        <motion.div
-          animate={isDragActive ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : {}}
-          transition={{ duration: 0.5 }}
-          className="relative"
-        >
-          <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 shadow-2xl group-hover:shadow-blue-500/50 transition-shadow duration-300">
-            <Upload className="h-10 w-10 text-white" />
+        <div className="flex flex-col items-center gap-4">
+          <div className={`
+            icon-box ${isDragActive ? 'bg-gradient-blue' : 'bg-gray-200'}
+            transition-all duration-200
+          `}>
+            <Upload className={`h-8 w-8 ${isDragActive ? 'text-white' : 'text-gray-600'}`} />
           </div>
-        </motion.div>
 
-        {isDragActive ? (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-2"
-          >
-            <p className="text-xl font-semibold text-blue-400">Rilascia i file qui...</p>
-            <Sparkles className="h-6 w-6 text-blue-400 mx-auto animate-pulse" />
-          </motion.div>
-        ) : (
-          <div className="space-y-3 relative z-10">
-            <p className="text-lg font-semibold text-slate-200">
-              Trascina qui i file CSV o clicca per selezionarli
-            </p>
-            <p className="text-sm text-slate-400 max-w-md mx-auto">
-              Supporta caricamento multiplo di file CSV con profili di consumo orari. Formati
-              accettati: CSV, PDF
-            </p>
-            <div className="flex items-center justify-center gap-2 pt-2">
-              <div className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium">
-                CSV
-              </div>
-              <div className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs font-medium">
-                PDF
+          {isDragActive ? (
+            <div>
+              <p className="text-xl font-bold text-blue-600 mb-2">Rilascia i file qui...</p>
+            </div>
+          ) : (
+            <div>
+              <p className="text-xl font-bold text-gray-900 mb-2">
+                Trascina qui i file CSV o clicca per selezionarli
+              </p>
+              <p className="text-gray-600">
+                Supporta caricamento multiplo di file CSV con profili di consumo orari
+              </p>
+              <div className="mt-4 inline-block">
+                <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm">
+                  Formato accettato: CSV
+                </span>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Shimmer effect on hover */}
-        <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-10 pointer-events-none" />
+          )}
+        </div>
       </div>
 
-      {/* Status Upload with Animations */}
+      {/* Status Upload */}
       {uploadStatus !== 'idle' && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ type: 'spring', bounce: 0.4 }}
-          className={`
-            p-5 rounded-2xl flex items-center gap-4 border
-            ${
-              uploadStatus === 'success'
-                ? 'bg-green-500/10 border-green-500/30 neon-glow-green'
-                : 'bg-red-500/10 border-red-500/30'
-            }
-          `}
-        >
-          {uploadStatus === 'success' ? (
-            <>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1, rotate: 360 }}
-                transition={{ type: 'spring', duration: 0.6 }}
-                className="bg-gradient-to-br from-green-500 to-emerald-600 p-2 rounded-xl"
-              >
-                <CheckCircle className="h-6 w-6 text-white" />
-              </motion.div>
-              <div className="flex-1">
-                <p className="text-green-400 font-semibold text-lg">
-                  {fileCount} file caricati con successo!
-                </p>
-                <p className="text-green-300/70 text-sm mt-1">
-                  Procedi alla configurazione delle tecnologie
-                </p>
-              </div>
-              <Sparkles className="h-5 w-5 text-green-400 animate-pulse" />
-            </>
-          ) : (
-            <>
-              <motion.div
-                animate={{ rotate: [0, -10, 10, -10, 0] }}
-                transition={{ duration: 0.5 }}
-                className="bg-gradient-to-br from-red-500 to-pink-600 p-2 rounded-xl"
-              >
-                <XCircle className="h-6 w-6 text-white" />
-              </motion.div>
-              <div className="flex-1">
-                <p className="text-red-400 font-semibold">Errore durante il caricamento</p>
-                <p className="text-red-300/70 text-sm mt-1">{errorMessage}</p>
-              </div>
-            </>
-          )}
-        </motion.div>
+        <div className={uploadStatus === 'success' ? 'status-success' : 'status-error'}>
+          <div className="flex items-center gap-4">
+            {uploadStatus === 'success' ? (
+              <>
+                <CheckCircle className="h-8 w-8 flex-shrink-0" />
+                <div>
+                  <p className="font-bold text-lg">
+                    {fileCount} file caricati con successo!
+                  </p>
+                  <p className="mt-1">
+                    Procedi alla configurazione delle tecnologie nella sezione successiva
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <XCircle className="h-8 w-8 flex-shrink-0" />
+                <div>
+                  <p className="font-bold text-lg">Errore durante il caricamento</p>
+                  <p className="mt-1">{errorMessage}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
 
-      {/* Info Box with Modern Style */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="glass-card p-6 rounded-2xl border border-blue-500/20"
-      >
-        <div className="flex gap-4">
-          <div className="bg-gradient-to-br from-blue-500 to-cyan-600 p-2 rounded-xl h-fit">
-            <FileText className="h-5 w-5 text-white" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-              Formato CSV richiesto
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
-                Importante
-              </span>
+      {/* Info Box */}
+      <div className="form-section">
+        <div className="flex items-start gap-4">
+          <FileText className="h-8 w-8 text-blue-600 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-bold text-lg text-gray-900 mb-3">
+              Formato CSV Richiesto
             </h3>
-            <ul className="text-sm text-slate-300 space-y-2">
+            <ul className="space-y-2 text-gray-700">
               <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2" />
-                <span>
-                  <strong className="text-white">Header:</strong> timestamp, power_kw
-                </span>
+                <span className="font-bold text-blue-600">•</span>
+                <span><strong>Header:</strong> timestamp, power_kw</span>
               </li>
               <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2" />
-                <span>Valori orari o quarto-orari</span>
+                <span className="font-bold text-blue-600">•</span>
+                <span>Valori orari o quarto-orari del consumo elettrico</span>
               </li>
               <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2" />
-                <span>L&apos;applicazione calcolerà automaticamente Pmax e consumo annuo</span>
+                <span className="font-bold text-blue-600">•</span>
+                <span>L'applicazione calcolerà automaticamente Pmax e consumo annuo</span>
               </li>
             </ul>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
