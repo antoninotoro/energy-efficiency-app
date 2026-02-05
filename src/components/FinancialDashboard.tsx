@@ -21,13 +21,13 @@ export default function FinancialDashboard() {
 
   if (!results) {
     return (
-      <div className="space-y-8">
+      <div className="max-w-5xl">
         <div className="card p-16 text-center">
-          <div className="mx-auto w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-6">
-            <BarChart3 className="h-10 w-10 text-gray-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-slate-100 rounded-2xl mb-6">
+            <BarChart3 className="h-10 w-10 text-slate-400" />
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Nessun Risultato Disponibile</h3>
-          <p className="text-gray-600 text-lg">
+          <h3 className="text-2xl font-bold text-slate-900 mb-3">Nessun Risultato Disponibile</h3>
+          <p className="text-slate-600">
             Configura le tecnologie e clicca su &quot;Esegui Simulazione&quot; per vedere i risultati
           </p>
         </div>
@@ -50,118 +50,101 @@ export default function FinancialDashboard() {
   }));
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="section-header">
-        <div className="icon-box bg-gradient-green">
-          <BarChart3 className="h-7 w-7 text-white" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard Risultati</h2>
-          <p className="text-gray-600">Analisi economica e KPI del progetto</p>
-        </div>
-      </div>
-
+    <div className="space-y-6">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* CAPEX Card */}
-        <div className="card p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="icon-box bg-gradient-blue" style={{ width: '48px', height: '48px' }}>
-              <DollarSign className="h-6 w-6 text-white" />
+        <div className="card p-5 card-hover">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center">
+              <DollarSign className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wide">Investimento</h3>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Investimento</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-4">{formatCurrency(results.capex.total)}</p>
-          <div className="space-y-2 pt-3 border-t-2 border-gray-200">
+          <p className="text-2xl font-bold text-slate-900 mb-3">{formatCurrency(results.capex.total)}</p>
+          <div className="space-y-1.5 pt-3 border-t border-slate-200">
             {results.capex.photovoltaic > 0 && (
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 flex items-center gap-2">
-                  <Sun className="h-4 w-4 text-orange-500" />
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <Sun className="h-3.5 w-3.5 text-amber-500" />
                   FV
                 </span>
-                <span className="font-semibold text-gray-900">{formatCurrency(results.capex.photovoltaic)}</span>
+                <span className="font-semibold text-slate-900">{formatCurrency(results.capex.photovoltaic)}</span>
               </div>
             )}
             {results.capex.battery > 0 && (
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600 flex items-center gap-2">
-                  <Battery className="h-4 w-4 text-green-500" />
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-600 flex items-center gap-1.5">
+                  <Battery className="h-3.5 w-3.5 text-emerald-500" />
                   BESS
                 </span>
-                <span className="font-semibold text-gray-900">{formatCurrency(results.capex.battery)}</span>
-              </div>
-            )}
-            {results.capex.heatPump > 0 && (
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">PdC</span>
-                <span className="font-semibold text-gray-900">{formatCurrency(results.capex.heatPump)}</span>
+                <span className="font-semibold text-slate-900">{formatCurrency(results.capex.battery)}</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Payback Card */}
-        <div className="card p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="icon-box bg-gradient-green" style={{ width: '48px', height: '48px' }}>
-              <Calendar className="h-6 w-6 text-white" />
+        <div className="card p-5 card-hover">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-lg flex items-center justify-center">
+              <Calendar className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wide">Payback</h3>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Payback</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-4">
-            {results.financialMetrics.simplePayback.toFixed(1)} <span className="text-xl text-gray-600">anni</span>
+          <p className="text-2xl font-bold text-slate-900 mb-3">
+            {results.financialMetrics.simplePayback.toFixed(1)} <span className="text-lg text-slate-600">anni</span>
           </p>
-          <div className="space-y-2 pt-3 border-t-2 border-gray-200">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Semplice</span>
-              <span className="font-semibold text-green-600">{results.financialMetrics.simplePayback.toFixed(1)} anni</span>
+          <div className="space-y-1.5 pt-3 border-t border-slate-200">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600">Semplice</span>
+              <span className="font-semibold text-emerald-600">{results.financialMetrics.simplePayback.toFixed(1)} anni</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Attualizzato</span>
-              <span className="font-semibold text-gray-900">{results.financialMetrics.discountedPayback.toFixed(1)} anni</span>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600">Attualizzato</span>
+              <span className="font-semibold text-slate-900">{results.financialMetrics.discountedPayback.toFixed(1)} anni</span>
             </div>
           </div>
         </div>
 
         {/* NPV Card */}
-        <div className="card p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="icon-box bg-gradient-purple" style={{ width: '48px', height: '48px' }}>
-              <TrendingUp className="h-6 w-6 text-white" />
+        <div className="card p-5 card-hover">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-500 rounded-lg flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wide">VAN (NPV)</h3>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">VAN (NPV)</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-4">
+          <p className="text-2xl font-bold text-slate-900 mb-3">
             {formatCurrency(results.financialMetrics.npv)}
           </p>
-          <div className="space-y-2 pt-3 border-t-2 border-gray-200">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">TIR (IRR)</span>
+          <div className="space-y-1.5 pt-3 border-t border-slate-200">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600">TIR (IRR)</span>
               <span className="font-semibold text-purple-600">{formatPercentage(results.financialMetrics.irr)}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Orizzonte</span>
-              <span className="font-semibold text-gray-900">20 anni</span>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600">Orizzonte</span>
+              <span className="font-semibold text-slate-900">20 anni</span>
             </div>
           </div>
         </div>
 
         {/* CO2 Card */}
-        <div className="card p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="icon-box bg-gradient-green" style={{ width: '48px', height: '48px' }}>
-              <Leaf className="h-6 w-6 text-white" />
+        <div className="card p-5 card-hover">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-lg flex items-center justify-center">
+              <Leaf className="h-5 w-5 text-white" />
             </div>
-            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wide">CO₂ Evitata</h3>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">CO₂ Evitata</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-4">
-            {formatNumber(results.energyMetrics.co2AvoidedTonnes, 1)} <span className="text-xl text-gray-600">ton/anno</span>
+          <p className="text-2xl font-bold text-slate-900 mb-3">
+            {formatNumber(results.energyMetrics.co2AvoidedTonnes, 1)} <span className="text-lg text-slate-600">t/anno</span>
           </p>
-          <div className="space-y-2 pt-3 border-t-2 border-gray-200">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Alberi equivalenti</span>
-              <span className="font-semibold text-green-600">{formatNumber(results.energyMetrics.equivalentTrees, 0)}</span>
+          <div className="space-y-1.5 pt-3 border-t border-slate-200">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-600">Alberi equiv.</span>
+              <span className="font-semibold text-emerald-600">{formatNumber(results.energyMetrics.equivalentTrees, 0)}</span>
             </div>
           </div>
         </div>
@@ -169,86 +152,85 @@ export default function FinancialDashboard() {
 
       {/* Metriche Energetiche */}
       <div className="card p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="icon-box bg-gradient-orange">
-            <Zap className="h-6 w-6 text-white" />
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <Zap className="h-5 w-5 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Metriche Energetiche</h3>
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Metriche Energetiche</h3>
+            <p className="text-xs text-slate-500">Performance impianto fotovoltaico</p>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="form-section text-center">
-            <p className="text-sm text-gray-600 mb-3 uppercase tracking-wide font-semibold">Produzione FV Annua</p>
-            <p className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <p className="text-xs text-slate-600 mb-2 uppercase tracking-wide font-semibold">Produzione FV Annua</p>
+            <p className="text-2xl font-bold text-slate-900 mb-1">
               {formatNumber(results.energyMetrics.annualPvProduction, 0)}
             </p>
-            <p className="text-base text-gray-600">kWh</p>
+            <p className="text-sm text-slate-600">kWh</p>
           </div>
-          <div className="form-section text-center">
-            <p className="text-sm text-gray-600 mb-3 uppercase tracking-wide font-semibold">Autoconsumo</p>
-            <p className="text-3xl font-bold text-green-600 mb-2">
+          <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <p className="text-xs text-slate-600 mb-2 uppercase tracking-wide font-semibold">Autoconsumo</p>
+            <p className="text-2xl font-bold text-emerald-600 mb-1">
               {formatPercentage(results.energyMetrics.selfConsumptionRate, 0)}
             </p>
-            <p className="text-base text-gray-600">della produzione</p>
+            <p className="text-sm text-slate-600">della produzione</p>
           </div>
-          <div className="form-section text-center">
-            <p className="text-sm text-gray-600 mb-3 uppercase tracking-wide font-semibold">Autosufficienza</p>
-            <p className="text-3xl font-bold text-blue-600 mb-2">
+          <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+            <p className="text-xs text-slate-600 mb-2 uppercase tracking-wide font-semibold">Autosufficienza</p>
+            <p className="text-2xl font-bold text-blue-600 mb-1">
               {formatPercentage(results.energyMetrics.selfSufficiencyRate, 0)}
             </p>
-            <p className="text-base text-gray-600">del consumo</p>
+            <p className="text-sm text-slate-600">del consumo</p>
           </div>
         </div>
       </div>
 
       {/* Grafico Cash Flow */}
       <div className="card p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-          <TrendingUp className="h-6 w-6 text-green-600" />
+        <h3 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-emerald-600" />
           Flusso di Cassa Cumulativo (20 anni)
         </h3>
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={cashFlowData}>
             <defs>
               <linearGradient id="colorCashFlow" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.15}/>
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis
               dataKey="year"
               stroke="#64748b"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              label={{ value: 'Anno', position: 'insideBottom', offset: -5, fill: '#64748b' }}
+              style={{ fontSize: '12px', fontWeight: 600 }}
+              tickLine={false}
             />
             <YAxis
               stroke="#64748b"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              label={{ value: 'Euro (€)', angle: -90, position: 'insideLeft', fill: '#64748b' }}
+              style={{ fontSize: '12px', fontWeight: 600 }}
               tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+              tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                border: '2px solid #e2e8f0',
-                borderRadius: '12px',
-                padding: '12px',
-                fontSize: '14px',
-                fontWeight: 600,
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                backgroundColor: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '10px',
+                padding: '10px',
+                fontSize: '13px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
               }}
               formatter={(value: number | undefined) => value !== undefined ? formatCurrency(value) : ''}
               labelFormatter={(label) => `Anno ${label}`}
-              labelStyle={{ color: '#1e293b', fontWeight: 700, marginBottom: '8px' }}
-            />
-            <Legend
-              wrapperStyle={{ fontSize: '14px', fontWeight: 600 }}
+              labelStyle={{ color: '#0f172a', fontWeight: 700, marginBottom: '6px' }}
             />
             <Area
               type="monotone"
               dataKey="cumulativeCashFlow"
               stroke="#10b981"
-              strokeWidth={3}
+              strokeWidth={2.5}
               fill="url(#colorCashFlow)"
               name="Cash Flow Cumulativo"
             />
@@ -258,44 +240,41 @@ export default function FinancialDashboard() {
 
       {/* Grafico Bilancio Energetico */}
       <div className="card p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-          <Zap className="h-6 w-6 text-yellow-600" />
+        <h3 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
+          <Zap className="h-5 w-5 text-amber-600" />
           Bilancio Energetico (Giorno Tipo)
         </h3>
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart data={energyBalanceData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis
               dataKey="hour"
               stroke="#64748b"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              label={{ value: 'Ora', position: 'insideBottom', offset: -5, fill: '#64748b' }}
+              style={{ fontSize: '12px', fontWeight: 600 }}
+              tickLine={false}
             />
             <YAxis
               stroke="#64748b"
-              style={{ fontSize: '14px', fontWeight: 600 }}
-              label={{ value: 'kWh', angle: -90, position: 'insideLeft', fill: '#64748b' }}
+              style={{ fontSize: '12px', fontWeight: 600 }}
+              tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                border: '2px solid #e2e8f0',
-                borderRadius: '12px',
-                padding: '12px',
-                fontSize: '14px',
-                fontWeight: 600,
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                backgroundColor: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '10px',
+                padding: '10px',
+                fontSize: '13px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
               }}
-              labelStyle={{ color: '#1e293b', fontWeight: 700, marginBottom: '8px' }}
+              labelStyle={{ color: '#0f172a', fontWeight: 700, marginBottom: '6px' }}
             />
-            <Legend
-              wrapperStyle={{ fontSize: '14px', fontWeight: 600 }}
-            />
+            <Legend wrapperStyle={{ fontSize: '13px', fontWeight: 600 }} />
             <Line
               type="monotone"
               dataKey="consumption"
               stroke="#ef4444"
-              strokeWidth={3}
+              strokeWidth={2.5}
               dot={false}
               name="Consumo"
             />
@@ -303,7 +282,7 @@ export default function FinancialDashboard() {
               type="monotone"
               dataKey="production"
               stroke="#eab308"
-              strokeWidth={3}
+              strokeWidth={2.5}
               dot={false}
               name="Produzione FV"
             />
@@ -311,32 +290,32 @@ export default function FinancialDashboard() {
         </ResponsiveContainer>
       </div>
 
-      {/* Tabella Conto Economico */}
+      {/* Tabella Conto Economico - Scrollabile */}
       <div className="card p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-          <DollarSign className="h-6 w-6 text-blue-600" />
+        <h3 className="text-base font-bold text-slate-900 mb-5 flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-blue-600" />
           Conto Economico (Primi 10 Anni)
         </h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
+        <div className="overflow-x-auto -mx-6 px-6">
+          <table className="min-w-full text-sm">
             <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wide">
+              <tr className="border-b-2 border-slate-200">
+                <th className="px-3 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
                   Anno
                 </th>
-                <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wide">
+                <th className="px-3 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
                   Ricavi
                 </th>
-                <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wide">
+                <th className="px-3 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
                   EBITDA
                 </th>
-                <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wide">
+                <th className="px-3 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
                   EBIT
                 </th>
-                <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wide">
+                <th className="px-3 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
                   Utile Netto
                 </th>
-                <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wide">
+                <th className="px-3 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
                   Cash Flow
                 </th>
               </tr>
@@ -345,25 +324,25 @@ export default function FinancialDashboard() {
               {results.yearlyResults.slice(0, 10).map((year) => (
                 <tr
                   key={year.year}
-                  className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                 >
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span className="text-base font-bold text-gray-900">{year.year}</span>
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    <span className="font-bold text-slate-900">{year.year}</span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className="text-base font-semibold text-gray-900">{formatCurrency(year.totalRevenue)}</span>
+                  <td className="px-3 py-3 whitespace-nowrap text-right">
+                    <span className="font-semibold text-slate-900">{formatCurrency(year.totalRevenue)}</span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className="text-base font-semibold text-gray-900">{formatCurrency(year.ebitda)}</span>
+                  <td className="px-3 py-3 whitespace-nowrap text-right">
+                    <span className="font-semibold text-slate-900">{formatCurrency(year.ebitda)}</span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className="text-base font-semibold text-gray-900">{formatCurrency(year.ebit)}</span>
+                  <td className="px-3 py-3 whitespace-nowrap text-right">
+                    <span className="font-semibold text-slate-900">{formatCurrency(year.ebit)}</span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className="text-base font-semibold text-gray-900">{formatCurrency(year.netIncome)}</span>
+                  <td className="px-3 py-3 whitespace-nowrap text-right">
+                    <span className="font-semibold text-slate-900">{formatCurrency(year.netIncome)}</span>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap text-right">
-                    <span className="text-base font-bold text-green-600">{formatCurrency(year.cashFlow)}</span>
+                  <td className="px-3 py-3 whitespace-nowrap text-right">
+                    <span className="font-bold text-emerald-600">{formatCurrency(year.cashFlow)}</span>
                   </td>
                 </tr>
               ))}

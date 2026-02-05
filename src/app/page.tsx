@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Settings, Calculator, BarChart3, DollarSign, Zap } from 'lucide-react';
+import { Database, Settings, DollarSign, BarChart3, Zap, Check } from 'lucide-react';
 import DataImporter from '@/components/DataImporter';
 import TechConfigurator from '@/components/TechConfigurator';
 import EconomicParameters from '@/components/EconomicParameters';
@@ -9,6 +9,13 @@ import FinancialDashboard from '@/components/FinancialDashboard';
 import { useEnergyStore } from '@/store/useEnergyStore';
 
 type Tab = 'import' | 'config' | 'economics' | 'results';
+
+interface Step {
+  id: Tab;
+  label: string;
+  icon: typeof Database;
+  description: string;
+}
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('import');
@@ -23,96 +30,145 @@ export default function Home() {
     setActiveTab('results');
   };
 
-  const tabs = [
-    { id: 'import' as Tab, label: 'Carica Dati', icon: BarChart3 },
-    { id: 'config' as Tab, label: 'Tecnologie', icon: Settings },
-    { id: 'economics' as Tab, label: 'Parametri Economici', icon: DollarSign },
-    { id: 'results' as Tab, label: 'Risultati', icon: Calculator },
+  const steps: Step[] = [
+    {
+      id: 'import',
+      label: 'Carica Dati',
+      icon: Database,
+      description: 'Upload profili energetici'
+    },
+    {
+      id: 'config',
+      label: 'Tecnologie',
+      icon: Settings,
+      description: 'Configura interventi'
+    },
+    {
+      id: 'economics',
+      label: 'Parametri Economici',
+      icon: DollarSign,
+      description: 'Setup analisi finanziaria'
+    },
+    {
+      id: 'results',
+      label: 'Risultati',
+      icon: BarChart3,
+      description: 'Dashboard KPI'
+    },
   ];
 
+  const getStepStatus = (stepId: Tab) => {
+    const currentIndex = steps.findIndex(s => s.id === activeTab);
+    const stepIndex = steps.findIndex(s => s.id === stepId);
+
+    if (stepId === activeTab) return 'active';
+    if (stepIndex < currentIndex) return 'completed';
+    return 'pending';
+  };
+
+  const isStepCompleted = (stepId: Tab) => {
+    if (stepId === 'import') return podData.length > 0;
+    if (stepId === 'config') return true; // Could add more validation
+    if (stepId === 'economics') return true;
+    return false;
+  };
+
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-white shadow-md border-b-4 border-blue-500">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="icon-box bg-gradient-blue">
-                <Zap className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Energy Efficiency Platform
-                </h1>
-                <p className="text-gray-600 mt-1">
-                  Dimensionamento Interventi Energetici C&I / B2G
-                </p>
-              </div>
+    <div className="min-h-screen flex">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <div className="p-6 border-b border-slate-200">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center">
+              <Zap className="h-6 w-6 text-white" />
             </div>
-
-            <button
-              onClick={handleRunSimulation}
-              disabled={isSimulating || podData.length === 0}
-              className="btn-primary flex items-center gap-3 px-8 py-4 text-lg"
-            >
-              <Calculator className="h-6 w-6" />
-              {isSimulating ? 'Simulazione in corso...' : 'Esegui Simulazione'}
-            </button>
+            <div>
+              <h1 className="text-lg font-bold text-slate-900">Energy Platform</h1>
+              <p className="text-xs text-slate-500">C&I / B2G Analysis</p>
+            </div>
           </div>
         </div>
-      </header>
 
-      {/* Navigation Tabs */}
-      <nav className="bg-white shadow-sm border-b-2 border-gray-200">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-2 py-4">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-3 px-6 py-3 rounded-lg font-semibold text-base
-                    transition-all duration-200
-                    ${
-                      isActive
-                        ? 'bg-gradient-blue text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }
-                  `}
-                >
-                  <Icon className="h-5 w-5" />
-                  {tab.label}
-                </button>
-              );
-            })}
+        <nav className="py-6">
+          <div className="px-6 mb-4">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Workflow
+            </p>
           </div>
+
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            const status = getStepStatus(step.id);
+            const completed = isStepCompleted(step.id);
+
+            return (
+              <div
+                key={step.id}
+                onClick={() => setActiveTab(step.id)}
+                className={`sidebar-item ${status === 'active' ? 'active' : ''} ${completed ? 'completed' : ''}`}
+              >
+                <div className={`step-indicator ${status === 'active' ? 'active' : ''} ${completed ? 'completed' : ''}`}>
+                  {completed ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <span>{index + 1}</span>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm">{step.label}</div>
+                  <div className="text-xs opacity-75">{step.description}</div>
+                </div>
+              </div>
+            );
+          })}
+        </nav>
+
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-200">
+          <button
+            onClick={handleRunSimulation}
+            disabled={isSimulating || podData.length === 0}
+            className="btn-success w-full flex items-center justify-center gap-2"
+          >
+            <BarChart3 className="h-5 w-5" />
+            {isSimulating ? 'Simulazione...' : 'Esegui Simulazione'}
+          </button>
         </div>
-      </nav>
+      </aside>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="card p-8 fade-in">
-          {activeTab === 'import' && <DataImporter />}
-          {activeTab === 'config' && <TechConfigurator />}
-          {activeTab === 'economics' && <EconomicParameters />}
-          {activeTab === 'results' && <FinancialDashboard />}
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t-2 border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <p>Energy Efficiency Platform - Dimensionamento Preliminare Interventi Energetici</p>
-            <div className="flex items-center gap-6">
-              <span className="font-semibold">Tecnologie: FV • BESS • PdC • LED</span>
+      <div className="main-content">
+        {/* Header */}
+        <header className="app-header">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                {steps.find(s => s.id === activeTab)?.label}
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">
+                {steps.find(s => s.id === activeTab)?.description}
+              </p>
             </div>
+
+            {podData.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="badge badge-green">
+                  {podData.length} POD caricati
+                </span>
+              </div>
+            )}
           </div>
-        </div>
-      </footer>
+        </header>
+
+        {/* Content Area */}
+        <main className="p-8 max-w-7xl mx-auto">
+          <div className="fade-in">
+            {activeTab === 'import' && <DataImporter />}
+            {activeTab === 'config' && <TechConfigurator />}
+            {activeTab === 'economics' && <EconomicParameters />}
+            {activeTab === 'results' && <FinancialDashboard />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

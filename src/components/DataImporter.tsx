@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
-import { Upload, FileText, CheckCircle, XCircle, Database } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, Info } from 'lucide-react';
 import { PODData } from '@/lib/types';
 import { useEnergyStore } from '@/store/useEnergyStore';
 
@@ -94,113 +94,135 @@ export default function DataImporter() {
   });
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="section-header">
-        <div className="icon-box bg-gradient-blue">
-          <Database className="h-7 w-7 text-white" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Carica Dati Energetici</h2>
-          <p className="text-gray-600">Upload profili di consumo POD (file CSV)</p>
-        </div>
-      </div>
-
-      {/* Dropzone */}
-      <div
-        {...getRootProps()}
-        className={`
-          border-4 border-dashed rounded-2xl p-12 text-center cursor-pointer
-          transition-all duration-200
-          ${
-            isDragActive
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50'
-          }
-        `}
-      >
-        <input {...getInputProps()} />
-        <div className="flex flex-col items-center gap-4">
-          <div className={`
-            icon-box ${isDragActive ? 'bg-gradient-blue' : 'bg-gray-200'}
-            transition-all duration-200
-          `}>
-            <Upload className={`h-8 w-8 ${isDragActive ? 'text-white' : 'text-gray-600'}`} />
-          </div>
-
-          {isDragActive ? (
-            <div>
-              <p className="text-xl font-bold text-blue-600 mb-2">Rilascia i file qui...</p>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Upload Area */}
+      <div className="lg:col-span-2 space-y-6">
+        {/* Dropzone */}
+        <div
+          {...getRootProps()}
+          className={`dropzone ${isDragActive ? 'active' : ''}`}
+        >
+          <input {...getInputProps()} />
+          <div className="relative z-10">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-100 rounded-2xl mb-6">
+              <Upload className="h-10 w-10 text-blue-600 upload-icon" />
             </div>
-          ) : (
-            <div>
-              <p className="text-xl font-bold text-gray-900 mb-2">
-                Trascina qui i file CSV o clicca per selezionarli
-              </p>
-              <p className="text-gray-600">
-                Supporta caricamento multiplo di file CSV con profili di consumo orari
-              </p>
-              <div className="mt-4 inline-block">
-                <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm">
-                  Formato accettato: CSV
-                </span>
+
+            {isDragActive ? (
+              <div>
+                <p className="text-xl font-bold text-blue-700 mb-2">
+                  Rilascia i file qui...
+                </p>
+                <p className="text-sm text-blue-600">
+                  I file verranno processati automaticamente
+                </p>
               </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Status Upload */}
-      {uploadStatus !== 'idle' && (
-        <div className={uploadStatus === 'success' ? 'status-success' : 'status-error'}>
-          <div className="flex items-center gap-4">
-            {uploadStatus === 'success' ? (
-              <>
-                <CheckCircle className="h-8 w-8 flex-shrink-0" />
-                <div>
-                  <p className="font-bold text-lg">
-                    {fileCount} file caricati con successo!
-                  </p>
-                  <p className="mt-1">
-                    Procedi alla configurazione delle tecnologie nella sezione successiva
-                  </p>
-                </div>
-              </>
             ) : (
-              <>
-                <XCircle className="h-8 w-8 flex-shrink-0" />
-                <div>
-                  <p className="font-bold text-lg">Errore durante il caricamento</p>
-                  <p className="mt-1">{errorMessage}</p>
+              <div>
+                <p className="text-xl font-bold text-slate-900 mb-2">
+                  Trascina qui i file CSV oppure clicca per selezionarli
+                </p>
+                <p className="text-slate-600 mb-4">
+                  Supporto per caricamento multiplo di profili di consumo orari
+                </p>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="badge badge-blue">CSV</span>
+                  <span className="badge badge-gray">Multiplo</span>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
-      )}
 
-      {/* Info Box */}
-      <div className="form-section">
-        <div className="flex items-start gap-4">
-          <FileText className="h-8 w-8 text-blue-600 flex-shrink-0 mt-1" />
-          <div>
-            <h3 className="font-bold text-lg text-gray-900 mb-3">
+        {/* Status Messages */}
+        {uploadStatus !== 'idle' && (
+          <div className={uploadStatus === 'success' ? 'status-success' : 'status-error'}>
+            <div className="flex items-center gap-4">
+              {uploadStatus === 'success' ? (
+                <>
+                  <CheckCircle className="h-6 w-6 flex-shrink-0" />
+                  <div>
+                    <p className="font-bold text-base">
+                      {fileCount} file caricati con successo!
+                    </p>
+                    <p className="text-sm mt-1">
+                      Procedi alla configurazione delle tecnologie nel passo successivo
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <XCircle className="h-6 w-6 flex-shrink-0" />
+                  <div>
+                    <p className="font-bold text-base">Errore durante il caricamento</p>
+                    <p className="text-sm mt-1">{errorMessage}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Info Card Sidebar */}
+      <div className="lg:col-span-1">
+        <div className="info-card sticky top-24">
+          <div className="flex items-center gap-2 mb-4">
+            <Info className="h-5 w-5 text-blue-600" />
+            <h3 className="font-bold text-base text-slate-900">
               Formato CSV Richiesto
             </h3>
-            <ul className="space-y-2 text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="font-bold text-blue-600">•</span>
-                <span><strong>Header:</strong> timestamp, power_kw</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="font-bold text-blue-600">•</span>
-                <span>Valori orari o quarto-orari del consumo elettrico</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="font-bold text-blue-600">•</span>
-                <span>L'applicazione calcolerà automaticamente Pmax e consumo annuo</span>
-              </li>
-            </ul>
+          </div>
+
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-semibold text-slate-900 mb-2">Struttura File</p>
+              <div className="bg-white rounded-lg p-3 border border-blue-200 font-mono text-xs">
+                <div className="text-slate-500">timestamp,power_kw</div>
+                <div>2024-01-01 00:00,125.5</div>
+                <div>2024-01-01 01:00,118.2</div>
+                <div>2024-01-01 02:00,112.7</div>
+                <div className="text-slate-400">...</div>
+              </div>
+            </div>
+
+            <div>
+              <p className="font-semibold text-slate-900 mb-2">Header Obbligatori</p>
+              <ul className="space-y-1">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold">•</span>
+                  <span><code className="text-xs bg-blue-50 px-1 py-0.5 rounded">timestamp</code> - Data e ora</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold">•</span>
+                  <span><code className="text-xs bg-blue-50 px-1 py-0.5 rounded">power_kw</code> - Potenza in kW</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-semibold text-slate-900 mb-2">Caratteristiche</p>
+              <ul className="space-y-1">
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 font-bold">✓</span>
+                  <span>Valori orari o quarto-orari</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 font-bold">✓</span>
+                  <span>Calcolo automatico Pmax</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-600 font-bold">✓</span>
+                  <span>Normalizzazione a 8760 ore</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="pt-3 border-t border-blue-200">
+              <p className="text-xs text-slate-600">
+                <strong>Nota:</strong> I file con formato errato verranno segnalati con un messaggio di errore dettagliato.
+              </p>
+            </div>
           </div>
         </div>
       </div>
